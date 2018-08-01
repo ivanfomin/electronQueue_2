@@ -13,14 +13,14 @@ class TaskController extends Controller
 {
     public function index()
     {
-        $tasks = Task::select(['id', 'name', 'counter'])->get();
+        $tasks = Task::all();
 
         return view('page')->with(['tasks' => $tasks]);
     }
 
     public function increment($id)
     {
-        Task::where('id', $id)->increment('counter', 1);
+        Task::find($id)->increment('counter', 1);
 
         //return redirect()->action('LogController@logging', ['id' => $id]);
 

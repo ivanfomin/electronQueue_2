@@ -10,15 +10,7 @@ use Illuminate\Support\Facades\DB;
 class LogController extends Controller
 {
 
-    protected $table = 'logs';
-    protected $log;
-
-    public function __construct()
-    {
-        $this->log = new Log();
-    }
-
-    public function logging($task_id)
+     public function logging($task_id)
     {
 
         Log::create(['task_id' => $task_id, 'status' => 1, 'created_at' => now()]);
@@ -28,23 +20,24 @@ class LogController extends Controller
 
     public function show()
     {
-        $logs = $this->log->queuedRecords();
+        $logs = Log::records(1);
+
+        return view('show')->with(['logs' => $logs]);
+    }
+
+    public function showDone()
+    {
+        $logs = Log::records(2);
 
         return view('show')->with(['logs' => $logs]);
     }
 
     public function work()
     {
-
-        Log::where('status', 1)->limit(1)->update(['status' => 2]);
+        Log::records(1)->first()->update(['status' => 2]);
 
         return redirect('/');
     }
 
-    public function showDone()
-    {
-        $logs = $this->log->doneRecords();
 
-        return view('show')->with(['logs' => $logs]);
-    }
 }
